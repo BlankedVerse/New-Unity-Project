@@ -58,7 +58,7 @@ public abstract class MovingObject : MonoBehaviour
 	// Name:		Move()
 	// Description:	This object's movement method, determining where it
 	//				moves on each frame.
-	protected void Move()
+	protected virtual void Move()
 	{
 		Vector2 start = transform.position;
 		Vector2 end = start + velocity;
