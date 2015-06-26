@@ -1,7 +1,7 @@
 ﻿/*
 * Filename:		Player.cs
 * Programmer:	Colin McMillan
-* Date:			
+* Date:			June 2015
 * Description:	
 */
 
@@ -15,9 +15,9 @@ using System.Collections;
 public class Player : MovingObject
 {
 	// Whether the player has the lifting gloves available
-	public bool hasLiftGlove;
+	static public bool hasLiftGlove = true;
 	// Whether the player has the boomerang available to throw.
-	public bool hasBoomerang;
+	static public bool hasBoomerang;
 
 	// How far away the player can grab objects from.
 	public float grabDistance;
@@ -48,6 +48,10 @@ public class Player : MovingObject
 		// Gets an offset for where the bottom of the box collider is, in
 		// relation to the player's transform location.
 		playerBottomOffset = collider.offset.y - collider.size.y/2;
+
+
+		// The player shouldn't be destroyed between rounds, just disabled.
+		//DontDestroyOnLoad (gameObject);
 	}
 	
 	// Name:		Update()
@@ -261,5 +265,44 @@ public class Player : MovingObject
 		Y += playerBottomOffset;
 		
 		return new Vector2(X, Y);
+	}
+
+
+
+	// Name:		OnTriggerEnter2D()
+	// Description:	Processes reactions to entering trigger regions on the map.
+	//				Including: Doors/exits
+	// Parameters:	Collider2D triggerZone	- The trigger region entered.
+	protected void OnTriggerEnter2D (Collider2D triggerZone)
+	{
+		// Check for an exit
+		if (triggerZone.tag == "Exit")
+		{
+			// Get the script for the door taken.
+			Door exitTaken = triggerZone.GetComponent<Door>();
+
+			// Pass some kind of information about the directionality of the door.
+
+			Application.LoadLevel(Application.loadedLevel);
+		}
+		// Check for a lock
+		else if (triggerZone.tag == "Lock")
+		{
+			// If the player is holding an item...
+			if (heldItem != null)
+			{
+				// ... and it's a key...
+				if (heldItem.GetType() == typeof(Key))
+				{
+					Key theKey = heldItem as Key;
+
+					// If the key successfully unlocks the lock, release the held item.
+					if (triggerZone.GetComponentInParent<Keyhole>().Unlock(theKey))
+					{
+						heldItem = null;
+					}
+				}
+			}
+		}
 	}
 }

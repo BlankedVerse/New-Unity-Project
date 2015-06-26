@@ -1,7 +1,7 @@
 ﻿/*
 * Filename:		MovingObject.cs
 * Programmer:	Colin McMillan
-* Date:			
+* Date:			June 2015
 * Description:	
 */
 

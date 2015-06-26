@@ -1,7 +1,7 @@
 ﻿/*
 * Filename:		LiftableObject.cs
 * Programmer:	Colin McMillan
-* Date:			
+* Date:			June 2015
 * Description:	
 */
 
@@ -18,18 +18,21 @@ public class LiftableObject : MonoBehaviour
 	MovingObject theHolder;
 	// Where, in relation to the holder of the object, it should hover.
 	float holdHeight;
+	// An offset based on the item to adjust the height.
+	protected float itemHoldOffset;
 	// An offset to determine where the bottom of the object is.
 	float objectBottomOffset;
 
 
 	// Name:		Start()
 	// Description:	Use this for initialization
-	void Start ()
+	protected virtual void Start ()
 	{
 		BoxCollider2D collider = GetComponent<BoxCollider2D>();
 
 		theHolder = null;
 		holdHeight = 0;
+		itemHoldOffset = 0.01f;
 		// Gets an offset for where the bottom of the box collider is, in
 		// relation to the player's transform location.
 		objectBottomOffset = collider.offset.y - collider.size.y/2;
@@ -61,7 +64,7 @@ public class LiftableObject : MonoBehaviour
 	public virtual bool OnLift(MovingObject holder, float heightOffset)
 	{
 		theHolder = holder;
-		holdHeight = heightOffset;
+		holdHeight = heightOffset + itemHoldOffset;
 
 		this.GetComponent<BoxCollider2D>().enabled = false;
 
@@ -97,7 +100,7 @@ public class LiftableObject : MonoBehaviour
 			this.GetComponent<BoxCollider2D>().enabled = true;
 			transform.position = dropLocation;
 			theHolder = null;
-			GetComponent<SpriteRenderer>().sortingOrder = 0;
+			GetComponent<SpriteRenderer>().sortingOrder -= 1;
 		}
 
 		return wasDropped;
