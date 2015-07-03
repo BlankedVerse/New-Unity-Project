@@ -20,7 +20,7 @@ public enum Direction
 
 
 // Name:	MovingObject
-// Purpose:	
+// Purpose:	Defines the behaviours of an object that moves of its own free will, so-to-speak.
 public abstract class MovingObject : MonoBehaviour
 {
 	// The directionality of the object, if applicable.

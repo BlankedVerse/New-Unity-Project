@@ -9,6 +9,9 @@
 using UnityEngine;
 using System.Collections;
 
+
+// Name:	Key
+// Purpose:	Defines a key, and its ability to unlock objects it is used on.
 public class Key : LiftableObject
 {
 	protected override void Start()

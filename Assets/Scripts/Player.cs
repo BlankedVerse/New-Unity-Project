@@ -11,7 +11,7 @@ using System.Collections;
 
 
 // Name:	Player
-// Purpose:	s
+// Purpose:	The controls, extra behaviours, and abilities of the player character.
 public class Player : MovingObject
 {
 	// Whether the player has the lifting gloves available

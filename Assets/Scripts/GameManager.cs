@@ -11,7 +11,7 @@ using System.Collections;
 
 
 // Name:	GameManager
-// Purpose:	
+// Purpose:	A singleton class that defines and manages the basic structure of gameflow.
 public class GameManager : MonoBehaviour
 {
 	public static GameManager manager = null;

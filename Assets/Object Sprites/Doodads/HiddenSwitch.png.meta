@@ -1,14 +1,11 @@
 fileFormatVersion: 2
-guid: 70137a7cfae59834485e6ae0b27554c0
-timeCreated: 1435612865
+guid: c044c4da02e39714086268f9ec2f6bdb
+timeCreated: 1435615742
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: PurpleGrey Doors_0
-    21300002: PurpleGrey Doors_1
-    21300004: PurpleGrey Doors_2
-    21300006: PurpleGrey Doors_3
-    21300008: PurpleGrey Doors_4
+    21300000: HiddenSwitch_0
+    21300002: HiddenSwitch_1
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -54,53 +51,23 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: PurpleGrey Doors_0
+    - name: HiddenSwitch_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: PurpleGrey Doors_1
+    - name: HiddenSwitch_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 16
         y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: PurpleGrey Doors_2
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: PurpleGrey Doors_3
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: PurpleGrey Doors_4
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 32
-        height: 32
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
