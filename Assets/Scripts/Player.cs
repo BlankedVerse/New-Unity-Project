@@ -208,7 +208,7 @@ public class Player : MovingObject
 	// Name:		Drop()
 	// Description:	Attempts to drop an object in front of the player, if there's
 	//				enough space.
-	private void Drop()
+	private void Drop ()
 	{
 		Vector2 dropLocation = DropPoint();
 		
@@ -275,6 +275,8 @@ public class Player : MovingObject
 	// Parameters:	Collider2D triggerZone	- The trigger region entered.
 	protected void OnTriggerEnter2D (Collider2D triggerZone)
 	{
+		//base.OnTriggerEnter2D(triggerZone);
+
 		// Check for an exit
 		if (triggerZone.tag == "Exit")
 		{

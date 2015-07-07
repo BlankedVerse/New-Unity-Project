@@ -14,7 +14,7 @@ using System.Collections;
 // Purpose:	Defines a key, and its ability to unlock objects it is used on.
 public class Key : LiftableObject
 {
-	protected override void Start()
+	protected override void Start ()
 	{
 		base.Start();
 		//itemHoldOffset = -.05f;
@@ -24,7 +24,7 @@ public class Key : LiftableObject
 
 	// Name:		UseKey()
 	// Description:	Use up the key after it's been used to unlock something
-	public virtual void UseKey()
+	public virtual void UseKey ()
 	{
 		gameObject.SetActive(false);
 	}

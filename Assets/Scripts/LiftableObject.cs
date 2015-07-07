@@ -122,8 +122,9 @@ public class LiftableObject : MonoBehaviour
 
 		// Raycast for any obstructions that might be in the way.
 		obstruction = Physics2D.Linecast(dropLocation, endPoint);
+
 		// If anything is the way, don't drop! Otherwise... do.
-		if (obstruction.transform == null)
+		if ((obstruction.collider == null) || (obstruction.collider.isTrigger))
 		{
 			isAllClear = true;
 		}
