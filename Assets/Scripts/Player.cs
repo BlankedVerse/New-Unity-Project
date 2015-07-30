@@ -2,7 +2,8 @@
 * Filename:		Player.cs
 * Programmer:	Colin McMillan
 * Date:			June 2015
-* Description:	
+* Description:	Contains the player object, describing the controls, appearance,
+* 				and behaviour of the player character.
 */
 
 
@@ -16,20 +17,23 @@ public class Player : MovingObject
 {
 	// Whether the player has the lifting gloves available
 	static public bool hasLiftGlove = true;
-	// Whether the player has the boomerang available to throw.
-	static public bool hasBoomerang;
 
 	// How far away the player can grab objects from.
-	public float grabDistance;
+	public float actDistance;
 	// A layer to check for grabbable objects
-	public LayerMask grabLayer;
+	public LayerMask actLayer;
 
 	// The object the player is currently holding.
 	LiftableObject heldItem;
 	// The offset to use to make the item appear at the proper height.
 	public float headHeight;
+	// The distance between the player's position and the height they lift at.
 	private float playerLiftOffset;
+	// The distance between the player's position and the bottom of their collision box
 	private float playerBottomOffset;
+
+
+	static public int MineStrength = 1;
 
 
 	// Name:		Start()
@@ -129,26 +133,44 @@ public class Player : MovingObject
 	//				depending on the items/tools they have.
 	private void Act()
 	{
-		// If the player has the glove and hits the space bar.
-		if ((hasLiftGlove) && (Input.GetKeyDown("space")))
-		{
-			LiftDrop();
-		}
-	}
-
-
-
-	// Name:		LiftDrop()
-	// Description: Attempts a lift action in the direction the
-	//				player is facing, if they aren't holding an item.
-	//				If the player IS holding an item, the item is dropped
-	//				in the appropriate direction.
-	private void LiftDrop()
-	{
 		// If no item is held...
 		if (heldItem == null)
 		{
-			Lift();
+			Vector2 startPoint = LiftPoint();
+			Vector2 actPoint = startPoint;
+			RaycastHit2D objectHit;
+			
+			switch (facing)
+			{
+			case Direction.EAST:
+				actPoint.x += actDistance;
+				break;
+			case Direction.WEST:
+				actPoint.x -= actDistance;
+				break;
+			case Direction.NORTH:
+				actPoint.y += actDistance;
+				break;
+			case Direction.SOUTH:
+				actPoint.y -= actDistance;
+				break;
+			}
+
+			
+			// Check for interactable objects at that point
+			objectHit = Physics2D.Linecast (startPoint, actPoint, actLayer);
+
+			if (objectHit.transform != null)
+			{
+				// Attempt to lift it
+				Lift(objectHit);
+				
+				// If it couldn't be lifted, try mining it!
+				if (heldItem == null)
+				{
+					Mine(objectHit);
+				}
+			}
 		}
 		// Otherwise, put the item down.
 		else
@@ -161,45 +183,38 @@ public class Player : MovingObject
 
 	// Name:		Lift()
 	// Description:	Attempts to lift an object in front of the player.
-	private void Lift()
+	// Parameters:	RaycastHit2D objectHit	- The object to try and lift.
+	private void Lift(RaycastHit2D objectHit)
 	{
-		Vector2 startPoint = LiftPoint();
-		Vector2 grabPoint = startPoint;
-		RaycastHit2D objectHit;
-		
-		switch (facing)
-		{
-		case Direction.EAST:
-			grabPoint.x += grabDistance;
-			break;
-		case Direction.WEST:
-			grabPoint.x -= grabDistance;
-			break;
-		case Direction.NORTH:
-			grabPoint.y += grabDistance;
-			break;
-		case Direction.SOUTH:
-			grabPoint.y -= grabDistance;
-			break;
-		}
-		Debug.Log(grabPoint);
-		
-		// Check for liftable objects at that point
-		objectHit = Physics2D.Linecast (startPoint, grabPoint, grabLayer);
-		
-		
-		// If a liftable object was hit...
-		if (objectHit.transform != null)
+		// If an object was hit...
+		if (objectHit.transform.tag == "Liftable")
 		{
 			float heightOffset = headHeight + GetComponent<BoxCollider2D>().offset.y;
-			
-			Debug.Log(objectHit.ToString());
+
 			// Set it as the lifted object.
 			heldItem = objectHit.transform.GetComponent<LiftableObject>();
-			
+
+			/* If the object can't be lifted - if it's a mineable rock or otherwise - 
+			then reset the heldItem to be null */
 			heldItem.OnLift(this, heightOffset);
 			
 			// This is where a lifting animation should happen.
+		}
+	}
+
+
+
+	// Name:		Mine()
+	// Description:	Attempts to mine an object in front of the player.
+	// Parameters:	RaycastHit2D objectHit	- The object to try and mine.
+	private void Mine(RaycastHit2D objectHit)
+	{
+		// If a mineable object was hit...
+		if (objectHit.transform.tag == "Mineable")
+		{
+			objectHit.transform.GetComponent<MineableObject>().OnMine(MineStrength);
+
+			// This is where a mining animation should happen (dig vs. pickaxe?)
 		}
 	}
 
@@ -215,16 +230,16 @@ public class Player : MovingObject
 		switch (facing)
 		{
 		case Direction.EAST:
-			dropLocation.x += grabDistance;
+			dropLocation.x += actDistance;
 			break;
 		case Direction.WEST:
-			dropLocation.x -= grabDistance;
+			dropLocation.x -= actDistance;
 			break;
 		case Direction.NORTH:
-			dropLocation.y += grabDistance;
+			dropLocation.y += actDistance;
 			break;
 		case Direction.SOUTH:
-			dropLocation.y -= grabDistance;
+			dropLocation.y -= actDistance;
 			break;
 		}
 		

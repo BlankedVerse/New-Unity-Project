@@ -2,7 +2,7 @@
 * Filename:		LiftableObject.cs
 * Programmer:	Colin McMillan
 * Date:			June 2015
-* Description:	
+* Description:	Contains an object that can be lifted and carried by the player character.
 */
 
 
@@ -11,7 +11,7 @@ using System.Collections;
 
 
 // Name:	LiftableObject
-// Purpose:	
+// Purpose:	Describes an object that can be lifted and carried by the player.
 public class LiftableObject : MonoBehaviour
 {
 	// The player holding the object.
