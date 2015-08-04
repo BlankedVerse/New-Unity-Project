@@ -192,7 +192,7 @@ public class WildernessSpawner : MonoBehaviour
 
 				newTile = 
 					Instantiate(newTile, new Vector3(x, y, 0f), Quaternion.identity)
-					as GameObject;
+						as GameObject;
 
 				newTile.transform.SetParent(this.transform);
 			}
