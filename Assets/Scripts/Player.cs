@@ -133,49 +133,53 @@ public class Player : MovingObject
 	//				depending on the items/tools they have.
 	private void Act()
 	{
-		// If no item is held...
-		if (heldItem == null)
+		// If the player is pressing the action key...
+		if (Input.GetKeyDown("space"))
 		{
-			Vector2 startPoint = LiftPoint();
-			Vector2 actPoint = startPoint;
-			RaycastHit2D objectHit;
-			
-			switch (facing)
+			// If no item is held...
+			if (heldItem == null)
 			{
-			case Direction.EAST:
-				actPoint.x += actDistance;
-				break;
-			case Direction.WEST:
-				actPoint.x -= actDistance;
-				break;
-			case Direction.NORTH:
-				actPoint.y += actDistance;
-				break;
-			case Direction.SOUTH:
-				actPoint.y -= actDistance;
-				break;
-			}
-
-			
-			// Check for interactable objects at that point
-			objectHit = Physics2D.Linecast (startPoint, actPoint, actLayer);
-
-			if (objectHit.transform != null)
-			{
-				// Attempt to lift it
-				Lift(objectHit);
+				Vector2 startPoint = LiftPoint();
+				Vector2 actPoint = startPoint;
+				RaycastHit2D objectHit;
 				
-				// If it couldn't be lifted, try mining it!
-				if (heldItem == null)
+				switch (facing)
 				{
-					Mine(objectHit);
+				case Direction.EAST:
+					actPoint.x += actDistance;
+					break;
+				case Direction.WEST:
+					actPoint.x -= actDistance;
+					break;
+				case Direction.NORTH:
+					actPoint.y += actDistance;
+					break;
+				case Direction.SOUTH:
+					actPoint.y -= actDistance;
+					break;
+				}
+
+				
+				// Check for interactable objects at that point
+				objectHit = Physics2D.Linecast (startPoint, actPoint, actLayer);
+
+				if (objectHit.transform != null)
+				{
+					// Attempt to lift it
+					Lift(objectHit);
+					
+					// If it couldn't be lifted, try mining it!
+					if (heldItem == null)
+					{
+						Mine(objectHit);
+					}
 				}
 			}
-		}
-		// Otherwise, put the item down.
-		else
-		{
-			Drop();
+			// Otherwise, put the item down.
+			else
+			{
+				Drop();
+			}
 		}
 	}
 
