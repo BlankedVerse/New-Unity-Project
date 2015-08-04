@@ -22,7 +22,7 @@ public class FloorTile : MonoBehaviour
 		if (SpriteList.Length > 0)
 		{
 			// Set the floor tile's sprite to be a random sprite from its list.
-			GetComponent<SpriteRenderer>().sprite = SpriteList[Random.Range(0, SpriteList.Length - 1)];
+			GetComponent<SpriteRenderer>().sprite = SpriteList[Random.Range(0, SpriteList.Length)];
 		}
 	}
 }
