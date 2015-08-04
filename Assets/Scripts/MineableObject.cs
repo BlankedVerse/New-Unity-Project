@@ -33,6 +33,9 @@ public class MineableObject : MonoBehaviour
 	// The percentage chance of mining a rare resource.
 	public int RareSpawnPercentage;
 
+	// How far spawned resources can be flung by this mine.
+	public float FlingDistance;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -55,15 +58,20 @@ public class MineableObject : MonoBehaviour
 		if (hitsTaken >= HitsPerLevel)
 		{
 			// Reset the hits, and increment the stage.
-			HitsPerLevel = 0;
 			hitsTaken = 0;
 
 			currentStage += 1;
+
+
+			// Spawn resource(s) as appropriate.
+			spawnResource();
+
 
 			// If the mine has run out of stages...
 			if (currentStage >= SpriteList.Length)
 			{
 				// Kill the mine!
+				Destroy(this.gameObject);
 			}
 			else
 			{
@@ -71,5 +79,38 @@ public class MineableObject : MonoBehaviour
 				renderer.sprite = SpriteList[currentStage];
 			}
 		}
+	}
+
+
+
+	// Name:		spawnResource()
+	// Description:	Spawns an appropriate resource from this mine, launching
+	//				it clear of the mine. 
+	private void spawnResource()
+	{
+		int resourceRoll = Random.Range(0, 100);
+		float xOffset = Random.Range (-1, 2) * FlingDistance;
+		float yOffset = Random.Range (-1, 2) * FlingDistance;
+		Vector3 spawnLocation = new Vector3 (this.transform.position.x + xOffset,
+		                                     this.transform.position.y + yOffset,
+		                                     0f);
+		GameObject spawnedResource = null;
+
+		if (resourceRoll < RareSpawnPercentage)
+		{
+			resourceRoll = Random.Range(0, RareResourcePrefabs.Length);
+
+			spawnedResource = RareResourcePrefabs[resourceRoll];
+		}
+		else
+		{
+			resourceRoll = Random.Range(0, CommonResourcePrefabs.Length);
+
+			spawnedResource = CommonResourcePrefabs[resourceRoll];
+		}
+
+		spawnedResource = 
+			Instantiate(spawnedResource, spawnLocation, Quaternion.identity)
+				as GameObject;
 	}
 }
