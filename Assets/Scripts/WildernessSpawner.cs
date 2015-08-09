@@ -8,6 +8,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Random = UnityEngine.Random;
 
 
@@ -15,7 +16,8 @@ public enum TileType
 {
 	FIELD = 0,
 	WALL,
-	PLAYERSTART
+	PLAYERSTART,
+	MINE
 }
 
 
@@ -45,11 +47,14 @@ public class WildernessSpawner : MonoBehaviour
 
 	public int PartsField;
 	public int PartsWall;
+	public int PartsMine;
 
 
-	public GameObject playerPrefab;
-	public GameObject floorPrefab;
-	public GameObject wallPrefab;
+	public GameObject PlayerPrefab;
+	public GameObject FloorPrefab;
+	public GameObject WallPrefab;
+	public GameObject PadPrefab;
+	public GameObject MinePrefab;
 
 
 	// The actual width of the map, in tiles.
@@ -57,10 +62,24 @@ public class WildernessSpawner : MonoBehaviour
 	// The actual height of the map, in tiles.
 	public int height;
 
+
+	private List<TileType> mapDie;
+
 	// Use this for initialization
 	void Start ()
 	{
 		tilemap = new List<List<TileType>>();
+
+
+
+
+		mapDie = new List<TileType>();
+
+		mapDie.AddRange(Enumerable.Repeat(TileType.FIELD, PartsField));
+		mapDie.AddRange(Enumerable.Repeat(TileType.WALL, PartsWall));
+		mapDie.AddRange(Enumerable.Repeat(TileType.MINE, PartsMine));
+
+
 
 		width = Random.Range(MinWidth, MaxWidth);
 		height = Random.Range(MinHeight, MaxHeight);
@@ -119,20 +138,11 @@ public class WildernessSpawner : MonoBehaviour
 	 */
 	private TileType randomTile()
 	{
-		int total = PartsWall + PartsField;
-
-		int randomRoll = Random.Range(0, total);
+		int randomRoll = Random.Range(0, mapDie.Count);
 
 		// Default tiles to a FIELD space
-		TileType returnTile = TileType.FIELD;
+		TileType returnTile = mapDie[randomRoll];
 
-
-		// If the roll is under the "parts wall" number, it's a wall.
-		if (randomRoll < PartsWall)
-		{
-			returnTile = TileType.WALL;
-		}
-		// Otherwise, the tile remains a field.
 
 		return returnTile;
 	}
@@ -148,7 +158,21 @@ public class WildernessSpawner : MonoBehaviour
 		int playerY = Random.Range(startBuffer, height - startBuffer);
 
 
+		/* The startBuffer guarantees that the spaces around the player are
+		 accessible indices of the tilemap. (i.e. +-1 isn't out of range.)*/
 
+		// For each space around the player's start position...
+		for (int x = playerX - 1; x <= playerX + 1; x++)
+		{
+			for (int y = playerY - 1; y <= playerY + 1; y++)
+			{
+				// Set the tile to be a field tile.
+				tilemap[x][y] = TileType.FIELD;
+			}
+		}
+		
+
+		// Set the player's start location.
 		tilemap[playerX][playerY] = TileType.PLAYERSTART;
 	}
 
@@ -160,40 +184,71 @@ public class WildernessSpawner : MonoBehaviour
 	 */
 	public void InstantiateMap()
 	{
+		// For each point on the map...
 		for (int y = 0; y < height; y++)
 		{
 			for (int x = 0; x < width; x++)
 			{
 				GameObject newTile = null;
 
+				// Depending on the TileType at that point, set the tile prefab to instantiate.
 				switch (tilemap[x][y])
 				{
 				case TileType.FIELD:
-					newTile = floorPrefab;
+					newTile = FloorPrefab;
 					break;
 				case TileType.WALL:
-					newTile = wallPrefab;
+					newTile = WallPrefab;
+					break;
+				case TileType.MINE:
+					// Get the mine prefab...
+					GameObject newMine = MinePrefab;
+
+					// Put some empty floor under it.
+					newTile = FloorPrefab;
+					
+					// Instantiate a mine at this location...
+					newMine =
+						Instantiate(newMine, new Vector3(x, y, 0f), Quaternion.identity)
+							as GameObject;
+					
+					// And set the mine as a child of the wilderness spawner object.
+					newMine.transform.SetParent(this.transform);
 					break;
 				case TileType.PLAYERSTART:
-					newTile = floorPrefab;
+					// Get the player prefab...
+					GameObject player = PlayerPrefab;
+					// Get the warpPad prefab...
+					GameObject warpPad = PadPrefab;
 
-					GameObject player = playerPrefab;
+					// Put some empty floor under it.
+					newTile = FloorPrefab;
 
+					// Instantiate a player and a warp pad at this location...
 					player =
 						Instantiate(player, new Vector3(x, y, 0f), Quaternion.identity)
-						as GameObject;
+							as GameObject;
+					warpPad =
+						Instantiate(warpPad, new Vector3(x, y, 0f), Quaternion.identity)
+							as GameObject;
 
+					// And set the player and warp pad as children of the wilderness spawner object.
 					player.transform.SetParent(this.transform);
+					warpPad.transform.SetParent(this.transform);
 					break;
+				
+				// When in doubt, make it a floor tile.
 				default:
-					newTile = floorPrefab;
+					newTile = FloorPrefab;
 					break;
 				}
 
+				// Instatiate the selected tile prefab...
 				newTile = 
 					Instantiate(newTile, new Vector3(x, y, 0f), Quaternion.identity)
 						as GameObject;
 
+				// And set this tile as a child of the wilderness spawner object.
 				newTile.transform.SetParent(this.transform);
 			}
 		}
