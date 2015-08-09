@@ -22,7 +22,7 @@ public class MineableObject : MonoBehaviour
 	private int currentStage;
 
 	// A reference to the mine's sprite renderer.
-	private SpriteRenderer renderer;
+	private SpriteRenderer mineRenderer;
 	// A list of sprites the mine uses as it is used up.
 	public Sprite [] SpriteList;
 
@@ -41,7 +41,7 @@ public class MineableObject : MonoBehaviour
 	{
 		currentStage = 0;
 
-		renderer = GetComponent<SpriteRenderer>();
+		mineRenderer = GetComponent<SpriteRenderer>();
 	}
 	
 
@@ -76,7 +76,7 @@ public class MineableObject : MonoBehaviour
 			else
 			{
 				// Change the sprite and spawn a resource.
-				renderer.sprite = SpriteList[currentStage];
+				mineRenderer.sprite = SpriteList[currentStage];
 			}
 		}
 	}
