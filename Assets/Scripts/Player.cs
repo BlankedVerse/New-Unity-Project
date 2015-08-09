@@ -12,7 +12,8 @@ using System.Collections;
 
 
 // Name:	Player
-// Purpose:	The controls, extra behaviours, and abilities of the player character.
+// Purpose:	The controls, extra behaviours, and abilities of the player character,
+//			as well as the player's progress and unlocked abilities/resources.
 public class Player : MovingObject
 {
 	// Whether the player has the lifting gloves available
@@ -33,7 +34,10 @@ public class Player : MovingObject
 	private float playerBottomOffset;
 
 
+	// The strength of the player's mining power.
 	static public int MineStrength = 1;
+	// The player's mineral count.
+	static public int MineralCount = 0;
 
 
 	// Name:		Start()
@@ -57,6 +61,8 @@ public class Player : MovingObject
 		// The player shouldn't be destroyed between rounds, just disabled.
 		//DontDestroyOnLoad (gameObject);
 	}
+
+
 	
 	// Name:		Update()
 	// Description:	Update is called once per frame
@@ -190,8 +196,9 @@ public class Player : MovingObject
 	// Parameters:	RaycastHit2D objectHit	- The object to try and lift.
 	private void Lift(RaycastHit2D objectHit)
 	{
-		// If an object was hit...
-		if (objectHit.transform.tag == "Liftable")
+		// If a liftable object was hit...
+		if ((objectHit.transform.tag == "Liftable")
+		    || (objectHit.transform.tag == "Resource"))
 		{
 			float heightOffset = headHeight + GetComponent<BoxCollider2D>().offset.y;
 
@@ -288,42 +295,10 @@ public class Player : MovingObject
 
 
 
-	// Name:		OnTriggerEnter2D()
-	// Description:	Processes reactions to entering trigger regions on the map.
-	//				Including: Doors/exits
-	// Parameters:	Collider2D triggerZone	- The trigger region entered.
-	protected void OnTriggerEnter2D (Collider2D triggerZone)
+	// Name:		AcquireMineral()
+	// Description:	Add minerals to the player's count.
+	public static void AcquireMineral(int mineralValue)
 	{
-		//base.OnTriggerEnter2D(triggerZone);
-
-		// Check for an exit
-		if (triggerZone.tag == "Exit")
-		{
-			// Get the script for the door taken.
-			Door exitTaken = triggerZone.GetComponent<Door>();
-
-			// Pass some kind of information about the directionality of the door.
-
-			Application.LoadLevel(Application.loadedLevel);
-		}
-		// Check for a lock
-		else if (triggerZone.tag == "Lock")
-		{
-			// If the player is holding an item...
-			if (heldItem != null)
-			{
-				// ... and it's a key...
-				if (heldItem.GetType() == typeof(Key))
-				{
-					Key theKey = heldItem as Key;
-
-					// If the key successfully unlocks the lock, release the held item.
-					if (triggerZone.GetComponentInParent<Keyhole>().Unlock(theKey))
-					{
-						heldItem = null;
-					}
-				}
-			}
-		}
+		MineralCount += mineralValue;
 	}
 }
