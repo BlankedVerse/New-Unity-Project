@@ -1,9 +1,11 @@
 ﻿/*
-* Filename:		WallTile.cs
-* Programmer:	Colin McMillan
-* Date:			July 2015
-* Description:	
-*/
+ * Filename:		WallTile.cs
+ * Programmer:		Colin McMillan
+ * Date:			July 2015
+ * Description:		Describes advanced behaviours of wall tiles, creating more
+ * 					complicated graphical structures - continuous walls instead of discrete
+ * 					individual blocks. Not presently in use, more of a hopefully-someday.
+ */
 
 using UnityEngine;
 using System.Collections;

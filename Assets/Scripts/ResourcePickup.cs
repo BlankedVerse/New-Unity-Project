@@ -1,26 +1,27 @@
 ﻿/*
-* Filename:		ResourcePickup.cs
-* Programmer:	Colin McMillan
-* Date:			August 2015
-* Description:	Describes the actions and behaviours of the warp pad.
-*/
+ * Filename:		ResourcePickup.cs
+ * Programmer:		Colin McMillan
+ * Date:			August 2015
+ * Description:		Describes the actions and behaviours of the warp pad.
+ */
 
 
 using UnityEngine;
 using System.Collections;
 
 
-// Name:	ResourcePickup
-// Purpose:	The behaviours and 
+// Name:		ResourcePickup
+// Purpose:		The behaviours and 
 public class ResourcePickup : LiftableObject
 {
 	// The value of the resource
 	public int value;
 
 
-	// Name:		Value()
-	// Description:	Returns the value of this pickup.
-	// Returns:		The value of the pickup.
+	/* 	Name:			Value()
+	 * 	Description:	Returns the value of this pickup.
+	 * 	Returns:		The value of the pickup.
+	 */
 	public int Value()
 	{
 		return value;

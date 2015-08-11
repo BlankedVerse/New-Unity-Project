@@ -1,17 +1,18 @@
 ﻿/*
-* Filename:		LiftableObject.cs
-* Programmer:	Colin McMillan
-* Date:			June 2015
-* Description:	Contains an object that can be lifted and carried by the player character.
-*/
+ * Filename:		LiftableObject.cs
+ * Programmer:		Colin McMillan
+ * Date:			June 2015
+ * Description:		Contains an object that can be lifted and carried by the player character.
+ */
 
 
 using UnityEngine;
 using System.Collections;
 
 
-// Name:	LiftableObject
-// Purpose:	Describes an object that can be lifted and carried by the player.
+/* Name:	LiftableObject
+ * Purpose:	Describes an object that can be lifted and carried by the player.
+ */
 public class LiftableObject : MonoBehaviour
 {
 	// The player holding the object.
@@ -24,9 +25,12 @@ public class LiftableObject : MonoBehaviour
 	float objectBottomOffset;
 
 
-	// Name:		Start()
-	// Description:	Use this for initialization
-	protected virtual void Start ()
+	/*	Name:			Start()
+	 * 	Description:	The initializations needed when this object is created.
+	 * 					Initializes variables and sets the liftable object's offsets
+	 * 					as used for collision, placement, and lifting by the player.
+	 */
+	protected virtual void Start()
 	{
 		BoxCollider2D collider = GetComponent<BoxCollider2D>();
 
@@ -37,10 +41,14 @@ public class LiftableObject : MonoBehaviour
 		// relation to the player's transform location.
 		objectBottomOffset = collider.offset.y - collider.size.y/2;
 	}
-	
-	// Name:		Update()
-	// Description:	Update is called once per frame
-	void Update ()
+
+
+
+	/*	Name:			Update()
+	 * 	Description:	Behaviours that happen for this object each frame.
+	 * 					Sets the object's location based on the object holding it.
+	 */
+	void Update()
 	{
 		if (theHolder != null)
 		{
@@ -55,12 +63,13 @@ public class LiftableObject : MonoBehaviour
 
 
 
-	// Name:		OnLift()
-	// Description:	The behaviours taken by the object when it's lifted.
-	// Parameters:	MovingObject holder		- The character who lifted the object.
-	//				float heightOffset		- The height at which the object is held.
-	// Returns:		True if the object has been lifted. False if not. (The basic
-	//				form always returns true, but this behaviour can be overriden.)
+	/* 	Name:			OnLift()
+	 * 	Description:	The behaviours taken by the object when it's lifted.
+	 * 	Parameters:		MovingObject holder		- The character who lifted the object.
+	 *					float heightOffset		- The height at which the object is held.
+	 * 	Returns:		True if the object has been lifted. False if not. (The basic
+	 *					form always returns true, but this behaviour can be overriden.)
+	 */
 	public virtual bool OnLift(MovingObject holder, float heightOffset)
 	{
 		theHolder = holder;
@@ -79,10 +88,11 @@ public class LiftableObject : MonoBehaviour
 
 
 
-	// Name:		OnDrop()
-	// Description:	What happens when the object is released/dropped by the holder.
-	// Parameters:	Vector2 dropLocation		- The location to drop the object at.
-	//				Direction releaseDirection	- What direction the object is being released in.
+	/* 	Name:			OnDrop()
+	 * 	Description:	What happens when the object is released/dropped by the holder.
+	 * 	Parameters:		Vector2 dropLocation		- The location to drop the object at.
+	 *					Direction releaseDirection	- What direction the object is being released in.
+	 */
 	public virtual bool OnDrop(Vector2 dropLocation, Direction releaseDirection)
 	{
 		// Whether the object can be/has been dropped.
@@ -108,10 +118,11 @@ public class LiftableObject : MonoBehaviour
 
 
 
-	// Name:		HasClearance()
-	// Description:	Determines if this object has enough space to be dropped.
-	// Parameters:	Vector2 dropLocation		- The location the object will be dropped at.
-	//				Direction releaseDirection	- The direction the object is being released.
+	/* 	Name:			HasClearance()
+	 * 	Description:	Determines if this object has enough space to be dropped.
+	 * 	Parameters:		Vector2 dropLocation		- The location the object will be dropped at.
+	 *					Direction releaseDirection	- The direction the object is being released.
+	 */
 	protected virtual bool hasClearance(Vector2 dropLocation, Direction releaseDirection)
 	{
 		// An obstruction that might be in the way of the object being dropped.

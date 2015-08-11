@@ -1,17 +1,18 @@
 ﻿/*
-* Filename:		MineableObject.cs
-* Programmer:	Colin McMillan
-* Date:			July 2015
-* Description:	An object that can be mined, spawning pickups and degrading when hit.
-*/
+ * Filename:		MineableObject.cs
+ * Programmer:		Colin McMillan
+ * Date:			July 2015
+ * Description:		An object that can be mined, spawning pickups and degrading when hit.
+ */
 
 using UnityEngine;
 using System.Collections;
 using Random = UnityEngine.Random;      // Tells Random to use the Unity Engine random number generator.
 
 
-// Name:	MineableObject
-// Purpose:	Describes the behaviours and properties of a mineable object.
+/* 	Name:		MineableObject
+ * 	Purpose:	Describes the behaviours and properties of a mineable object.
+ */
 public class MineableObject : MonoBehaviour
 {
 	// How many "hits" it takes to destroy a mineable rock.
@@ -36,7 +37,11 @@ public class MineableObject : MonoBehaviour
 	// How far spawned resources can be flung by this mine.
 	public float FlingDistance;
 
-	// Use this for initialization
+
+
+	/*	Name:			Start()
+	 * 	Description:	The initializations needed when this object is created.
+	 */
 	void Start ()
 	{
 		currentStage = 0;
@@ -46,9 +51,10 @@ public class MineableObject : MonoBehaviour
 	
 
 
-	// Name:		OnMine()
-	// Description:	Mines this source, spawning resources and reducing the
-	//				mine's health.
+	/* 	Name:			OnMine()
+	 * 	Description:	Mines this source, spawning resources and reducing the
+	 *					mine's health.
+	 */
 	public void OnMine(int mineStrength)
 	{
 		// Take the hits.
@@ -83,18 +89,25 @@ public class MineableObject : MonoBehaviour
 
 
 
-	// Name:		spawnResource()
-	// Description:	Spawns an appropriate resource from this mine, launching
-	//				it clear of the mine. 
+	/* 	Name:			spawnResource()
+	 * 	Description:	Spawns an appropriate resource from this mine, launching
+	 *					it clear of the mine.
+	 */
 	private void spawnResource()
 	{
+		// A storage for the "die" rolls for the resource spawning.
 		int resourceRoll = Random.Range(0, 100);
+		// The randomized distance to throw the spawned resource left/right.
 		float xOffset = Random.Range (-1, 2) * FlingDistance;
+		// The randomized distance to throw the spawned resource up/down.
 		float yOffset = Random.Range (-1, 2) * FlingDistance;
+		// The location to spawn the resource at when mined.
 		Vector3 spawnLocation = new Vector3 (this.transform.position.x + xOffset,
 		                                     this.transform.position.y + yOffset,
 		                                     0f);
+		// A reference to the resource spawned by this mine.
 		GameObject spawnedResource = null;
+
 
 		if (resourceRoll < RareSpawnPercentage)
 		{

@@ -1,19 +1,20 @@
 ﻿/*
-* Filename:		Player.cs
-* Programmer:	Colin McMillan
-* Date:			June 2015
-* Description:	Contains the player object, describing the controls, appearance,
-* 				and behaviour of the player character.
-*/
+ * Filename:		Player.cs
+ * Programmer:		Colin McMillan
+ * Date:			June 2015
+ * Description:		Contains the player object, describing the controls, appearance,
+ * 					and behaviour of the player character.
+ */
 
 
 using UnityEngine;
 using System.Collections;
 
 
-// Name:	Player
-// Purpose:	The controls, extra behaviours, and abilities of the player character,
-//			as well as the player's progress and unlocked abilities/resources.
+/* 	Name:		Player
+ * 	Purpose:	The controls, extra behaviours, and abilities of the player character,
+ *				as well as the player's progress and unlocked abilities/resources.
+ */
 public class Player : MovingObject
 {
 	// Whether the player has the lifting gloves available
@@ -40,10 +41,13 @@ public class Player : MovingObject
 	static public int MineralCount = 0;
 
 
-	// Name:		Start()
-	// Description:	Use this for initialization
+	/*	Name:			Start()
+	 * 	Description:	The initializations needed when this object is created.
+	 * 					
+	 */
 	protected override void Start()
 	{
+		// A reference to the collider of the player object.
 		BoxCollider2D collider = GetComponent<BoxCollider2D>();
 
 		base.Start();
@@ -64,8 +68,9 @@ public class Player : MovingObject
 
 
 	
-	// Name:		Update()
-	// Description:	Update is called once per frame
+	/* 	Name:			Update()
+	 * 	Description:	Update is called once per frame.
+	 */
 	private void Update()
 	{
 		// Process movement input/motion
@@ -77,9 +82,10 @@ public class Player : MovingObject
 
 
 
-	// Name:		Move()
-	// Description:	Processes user input to determine the direction
-	//				and movement for this frame.
+	/* 	Name:			Move()
+	 * 	Description:	Processes user input to determine the direction
+	 *					and movement for this frame.
+	 */
 	protected override void Move()
 	{
 		// Get control input for movement and tool usage.
@@ -134,9 +140,10 @@ public class Player : MovingObject
 
 
 
-	// Name:		Act()
-	// Description:	Goes through the various actions available to the player,
-	//				depending on the items/tools they have.
+	/* 	Name:			Act()
+	 * 	Description:	Goes through the various actions available to the player,
+	 *					depending on the items/tools they have.
+	 */
 	private void Act()
 	{
 		// If the player is pressing the action key...
@@ -191,9 +198,10 @@ public class Player : MovingObject
 
 
 
-	// Name:		Lift()
-	// Description:	Attempts to lift an object in front of the player.
-	// Parameters:	RaycastHit2D objectHit	- The object to try and lift.
+	/* 	Name:			Lift()
+	 * 	Description:	Attempts to lift an object in front of the player.
+	 * 	Parameters:		RaycastHit2D objectHit	- The object to try and lift.
+	 */
 	private void Lift(RaycastHit2D objectHit)
 	{
 		// If a liftable object was hit...
@@ -215,9 +223,10 @@ public class Player : MovingObject
 
 
 
-	// Name:		Mine()
-	// Description:	Attempts to mine an object in front of the player.
-	// Parameters:	RaycastHit2D objectHit	- The object to try and mine.
+	/* 	Name:			Mine()
+	 * 	Description:	Attempts to mine an object in front of the player.
+	 * 	Parameters:		RaycastHit2D objectHit	- The object to try and mine.
+	 */
 	private void Mine(RaycastHit2D objectHit)
 	{
 		// If a mineable object was hit...
@@ -231,9 +240,10 @@ public class Player : MovingObject
 
 
 
-	// Name:		Drop()
-	// Description:	Attempts to drop an object in front of the player, if there's
-	//				enough space.
+	/* 	Name:			Drop()
+	 * 	Description:	Attempts to drop an object in front of the player, if there's
+	 *					enough space.
+	 */
 	private void Drop ()
 	{
 		Vector2 dropLocation = DropPoint();
@@ -263,11 +273,12 @@ public class Player : MovingObject
 
 
 
-	// Name:		LiftPoint()
-	// Description:	Calculates where the lifting action should originate from.
-	//				That is, the starting point for checking for liftable objects.
-	//				Presently, this is the midpoint of the player's hitbox.
-	// Return:		A Vector2 indicating 
+	/* 	Name:			LiftPoint()
+	 * 	Description:	Calculates where the lifting action should originate from.
+	 *					That is, the starting point for checking for liftable objects.
+	 *					Presently, this is the midpoint of the player's hitbox.
+	 * 	Return:			A Vector2 indicating where to lift from. (Preferably, with your legs.)
+	 */
 	private Vector2 LiftPoint()
 	{
 		float X = transform.position.x;
@@ -280,9 +291,10 @@ public class Player : MovingObject
 	
 	
 	
-	// Name:		LiftPoint()
-	// Description:	Calculates where objects should be dropped off at.
-	// Return:		A Vector2 indicating 
+	/* 	Name:			LiftPoint()
+	 * 	Description:	Calculates where objects should be dropped off at.
+	 * 	Return:			A Vector2 indicating where the object will be dropped.
+	 */
 	private Vector2 DropPoint()
 	{
 		float X = transform.position.x;
@@ -295,8 +307,9 @@ public class Player : MovingObject
 
 
 
-	// Name:		AcquireMineral()
-	// Description:	Add minerals to the player's count.
+	/* 	Name:			AcquireMineral()
+	 * 	Description:	Add minerals to the player's count.
+	 */
 	public static void AcquireMineral(int mineralValue)
 	{
 		MineralCount += mineralValue;
