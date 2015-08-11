@@ -1,10 +1,11 @@
 ﻿/*
-* Filename:		Keyhole.cs
-* Programmer:	Colin McMillan
-* Date:			June 2015
-* Description:	
-*/
+ * Filename:		SwitchableObject.cs
+ * Programmer:		Colin McMillan
+ * Date:			June 2015
+ * Description:	
+ */
 
+// Not currently in use.
 
 using UnityEngine;
 using System.Collections;

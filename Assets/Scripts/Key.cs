@@ -1,10 +1,13 @@
 ﻿/*
-* Filename:		Key.cs
-* Programmer:	Colin McMillan
-* Date:			June 2015
-* Description:	
-*/
+ * Filename:		Key.cs
+ * Programmer:		Colin McMillan
+ * Date:			June 2015
+ * Description:	
+ */
 
+
+
+// Not currently in use/updated.
 
 using UnityEngine;
 using System.Collections;

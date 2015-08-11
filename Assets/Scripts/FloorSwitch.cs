@@ -1,27 +1,40 @@
 ﻿/*
-* Filename:		FloorSwitch.cs
-* Programmer:	Colin McMillan
-* Date:			June 2015
-* Description:	
-*/
+ * Filename:		FloorSwitch.cs
+ * Programmer:		Colin McMillan
+ * Date:			June 2015
+ * Description:		Details the functionality and behaviours of a floor switch, triggered by 
+ * 					characters standing on top of it.
+ */
+
+
+// Not currently in use/updated.
 
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 
-// Name:	FloorSwitch
-// Purpose:	
+/*	Name:		FloorSwitch
+ *	Purpose:	A floor switch that can be triggered by placing objects on top of it.
+ */
 public class FloorSwitch : MonoBehaviour
 {
+	// The parent of the switch.
 	public SwitchableObject parent;
+	// The objects pressing down on this switch.
 	List<Collider2D> pressedBy;
+	// Whether this switch has weight on it or not.
 	bool isWeighedDown;
+	// Whether the weight on the switch has changed since the last frame.
 	bool weightChanged;
 
+	// A reference to the collision box used by the switch.
 	Collider2D switchCollider;
 
-	protected void Start ()
+	/*	Name:			Start()
+	 * 	Description:	The initializations needed when this object is created.
+	 */
+	protected void Start()
 	{
 		pressedBy = new List<Collider2D>();
 		isWeighedDown = false;
@@ -32,7 +45,10 @@ public class FloorSwitch : MonoBehaviour
 
 
 
-	protected void Update ()
+	/*	Name:			Update()
+	 * 	Description:	The initializations needed when this object is created.
+	 */
+	protected void Update()
 	{
 		/* Because OnTriggerExit doesn't work for objects that get teleported
 		 away from the switch, on each update the list is checked to make sure

@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+// Not currently in use.
+
 public class SwitchableDoor : SwitchableObject
 {
 	// Name:		OnSwitchOn()
