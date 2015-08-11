@@ -1,9 +1,11 @@
 ﻿/*
-* Filename:		FloorSwitch.cs
-* Programmer:	Colin McMillan
-* Date:			June 2015
-* Description:	
-*/
+ * Filename:		WildernessSpawner.cs
+ * Programmer:		Colin McMillan
+ * Date:			August 2015
+ * Description:		Defines the WildernessSpawner script, which creates a randomized
+ * 					map for the player to explore. The game object this is attached to will
+ * 					be the parent to all tiles and objects created.
+ */
 
 using UnityEngine;
 using System.Collections;
@@ -12,6 +14,9 @@ using System.Linq;
 using Random = UnityEngine.Random;
 
 
+/* Name:	TileType
+ * Purpose:	Lists the types of tiles that can be placed on a map.
+ */
 public enum TileType
 {
 	FIELD = 0,
@@ -27,13 +32,14 @@ public enum TileType
  */
 public class WildernessSpawner : MonoBehaviour
 {
-	
+	// The minimum distance between the player's start location and the edge of the map.
 	const int startBuffer = 2;
 
 
-	// A short-hand of the map
+	// A short-hand version of the map.
 	private List<List<TileType>> tilemap;
-	public TileType [,] tileList;
+
+	//public TileType [,] tileList;
 
 	// The minimum width of the map, in tiles.
 	public int MinWidth;
@@ -65,45 +71,80 @@ public class WildernessSpawner : MonoBehaviour
 
 	private List<TileType> mapDie;
 
-	// Use this for initialization
+
+	/*	Name:			Start()
+	 * 	Description:	The initializations needed when this object is created.
+	 * 					Creates a map die and a new map based on the values input into
+	 * 					the editor.
+	 */
 	void Start ()
 	{
-		tilemap = new List<List<TileType>>();
-
-
-
-
+		// Create a die to roll for tile types.
 		mapDie = new List<TileType>();
 
+		/* For each type of tile, add a number of sides to the die in
+		 * proportion to the ratio set in the editor. */
 		mapDie.AddRange(Enumerable.Repeat(TileType.FIELD, PartsField));
 		mapDie.AddRange(Enumerable.Repeat(TileType.WALL, PartsWall));
 		mapDie.AddRange(Enumerable.Repeat(TileType.MINE, PartsMine));
 
 
+		// Create and instantiate a new map.
+		CreateMap();
+	}
 
+
+
+	/*	Name:			CreateMap()
+	 *	Description:	Randomizes and instantiates a new map.
+	 */
+	public void CreateMap()
+	{
+		// Set the map to a random size with random tiles.
+		randomizeMap();
+		
+		// Assign the player starting location.
+		setPlayerStart();
+		
+		// Instantiate the tiles and objects of the map.
+		instantiateMap();
+	}
+
+
+
+	/*	Name:			randomizeMap()
+	 * 	Description:	Randomizes the size of the map and creates a new
+	 * 					tilemap to be instantiated.
+	 */
+	private void randomizeMap()
+	{
+		// Initialize/reinitialize the tilemap list.
+		tilemap = new List<List<TileType>>();
+
+		// Set the width and height of the map.
 		width = Random.Range(MinWidth, MaxWidth);
 		height = Random.Range(MinHeight, MaxHeight);
-
-
+		
+		
 		// For each column on the tilemap...
 		for (int x = 0; x < width; x++)
 		{
 			// Create a row.
 			List<TileType> currentLine = new List<TileType>();
-
+			
 			/* If the line doesn't represent the eastern or western edge 
 			 * of the map... */
 			if ((x > 0) && (x < (width - 1)))
 			{
 				// Add the north-most boundary.
 				currentLine.Add(TileType.WALL);
-
+				
 				// Fill the intervening space with random spaces
 				for (int y = 1; y < (height - 1); y++)
 				{
 					currentLine.Add(randomTile());
 				}
-
+				
 				// Add the south-most boundary.
 				currentLine.Add(TileType.WALL);
 			}
@@ -116,16 +157,10 @@ public class WildernessSpawner : MonoBehaviour
 					currentLine.Add(TileType.WALL);
 				}
 			}
-
+			
 			// Add the completed line to the tilemap
 			tilemap.Add(currentLine);
 		}
-
-		// Assign the player starting location
-		setPlayerStart();
-
-
-		InstantiateMap();
 	}
 
 
@@ -133,7 +168,6 @@ public class WildernessSpawner : MonoBehaviour
 	/*	Name:			randomTile()
 	 *  Description:	Returns a random tile ID based on the declared probabilities
 	 * 					of various tiles appearing.
-	 *	Parameters:		
 	 *	Returns:		A randomly determined TileType
 	 */
 	private TileType randomTile()
@@ -154,7 +188,9 @@ public class WildernessSpawner : MonoBehaviour
 	 */
 	private void setPlayerStart()
 	{
+		// The player's starting X position in the tilemap.
 		int playerX = Random.Range(startBuffer, width - startBuffer);
+		// The player's starting Y position in the tilemap.
 		int playerY = Random.Range(startBuffer, height - startBuffer);
 
 
@@ -177,12 +213,61 @@ public class WildernessSpawner : MonoBehaviour
 	}
 
 
+
+	/*	Name:			placePlayer()
+	 *  Description:	Instatiates a player and warp pad at the given coordinates.
+	 * 	Parameters:		int x	- The x coordinate to place the player.
+	 * 					int y	- The y coordinate to place the player.
+	 */
+	private void placePlayer(int x, int y)
+	{
+		// Get the player prefab...
+		GameObject player = PlayerPrefab;
+		// Get the warpPad prefab...
+		GameObject warpPad = PadPrefab;
+
+		
+		// Instantiate a player and a warp pad at this location...
+		player =
+			Instantiate(player, new Vector3(x, y, 0f), Quaternion.identity)
+				as GameObject;
+		warpPad =
+			Instantiate(warpPad, new Vector3(x, y, 0f), Quaternion.identity)
+				as GameObject;
+		
+		// And set the player and warp pad as children of the wilderness spawner object.
+		player.transform.SetParent(this.transform);
+		warpPad.transform.SetParent(this.transform);
+	}
+
+
+
+	/*	Name:			placeMine()
+	 *  Description:	Instatiates a mine at the given coordinates.
+	 * 	Parameters:		int x	- The x coordinate to place the mine.
+	 * 					int y	- The y coordinate to place the mine.
+	 */
+	private void placeMine(int x, int y)
+	{
+		// Get the mine prefab...
+		GameObject newMine = MinePrefab;
+
+		// Instantiate a mine at this location...
+		newMine =
+			Instantiate(newMine, new Vector3(x, y, 0f), Quaternion.identity)
+				as GameObject;
+		
+		// And set the mine as a child of the wilderness spawner object.
+		newMine.transform.SetParent(this.transform);
+	}
+
+
 	
-	/*	Name:			InstantiateMap()
+	/*	Name:			instantiateMap()
 	 *  Description:	Instantiates and adds as children all the tiles and
 	 * 					objects for this map.
 	 */
-	public void InstantiateMap()
+	private void instantiateMap()
 	{
 		// For each point on the map...
 		for (int y = 0; y < height; y++)
@@ -201,42 +286,17 @@ public class WildernessSpawner : MonoBehaviour
 					newTile = WallPrefab;
 					break;
 				case TileType.MINE:
-					// Get the mine prefab...
-					GameObject newMine = MinePrefab;
-
+					// Instantiate a mine...
+					placeMine(x, y);
 					// Put some empty floor under it.
 					newTile = FloorPrefab;
-					
-					// Instantiate a mine at this location...
-					newMine =
-						Instantiate(newMine, new Vector3(x, y, 0f), Quaternion.identity)
-							as GameObject;
-					
-					// And set the mine as a child of the wilderness spawner object.
-					newMine.transform.SetParent(this.transform);
 					break;
 				case TileType.PLAYERSTART:
-					// Get the player prefab...
-					GameObject player = PlayerPrefab;
-					// Get the warpPad prefab...
-					GameObject warpPad = PadPrefab;
-
+					// Instantiate the player and warp pad...
+					placePlayer(x, y);
 					// Put some empty floor under it.
 					newTile = FloorPrefab;
-
-					// Instantiate a player and a warp pad at this location...
-					player =
-						Instantiate(player, new Vector3(x, y, 0f), Quaternion.identity)
-							as GameObject;
-					warpPad =
-						Instantiate(warpPad, new Vector3(x, y, 0f), Quaternion.identity)
-							as GameObject;
-
-					// And set the player and warp pad as children of the wilderness spawner object.
-					player.transform.SetParent(this.transform);
-					warpPad.transform.SetParent(this.transform);
 					break;
-				
 				// When in doubt, make it a floor tile.
 				default:
 					newTile = FloorPrefab;
